@@ -7,10 +7,13 @@ const {
   getAll,
   finishExam,
   addExam,
+  getOne,
 } = require("../controllers/examController");
 
 // Listed Exams
 router.get("/", getAll);
+//get One exam data
+router.post("/getOne", getOne);
 // creating Exams
 router.post("/create", addExam);
 // deleted Exams

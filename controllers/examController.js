@@ -1,9 +1,11 @@
 const Exam = require("../models/exam");
+const Times = require("../models/times");
 const calculators = require("../calculators/tyt_pointCalculator");
 const tyt_pointCalculator = calculators.tyt_pointCalculator;
 
 const admin = require("firebase-admin");
 const serviceAccount = require("../remoteTrialExam-0b090011ed0f.json");
+const { debug } = require("dotenv/lib/env-options");
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
@@ -36,9 +38,33 @@ const getAll = async (req, res, next) => {
           doc.data().startTime,
           doc.data().endTime
         );
+        console.log(examArr);
         examArr.push(exam);
       });
       res.send(examArr);
+    }
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
+
+const getOne = async (req, res, next) => {
+  const examID = req.body.examID;
+  const timeArr = [];
+  console.log(examID);
+  try {
+    const exams = await db.collection("exams").doc(examID);
+    const data = await exams.get();
+    if (data.empty) {
+      res.status(404).send("no exams record found");
+    } else {
+      const times = new Times(
+        data.data().id,
+        data.data().startTime,
+        data.data().endTime
+      );
+      timeArr.push(times);
+      res.status(200).send(times);
     }
   } catch (error) {
     res.status(400).send(error.message);
@@ -89,4 +115,5 @@ module.exports = {
   getAll,
   finishExam,
   addExam,
+  getOne,
 };

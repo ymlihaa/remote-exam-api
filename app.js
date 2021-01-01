@@ -9,8 +9,8 @@ require("dotenv/config");
 const examRouter = require("./routes/exam_router");
 
 app.use(bodyParser.json());
-app.use(cors());
 app.use(express.json());
+app.use(cors());
 
 app.use("/exam", examRouter);
 app.listen(process.env.PORT);
