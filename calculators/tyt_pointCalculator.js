@@ -11,7 +11,10 @@ module.exports = {
         "=> ans",
         answerKeys[index]
       );
-      if (studentKeys[index] == answerKeys[index] && index <= 39) {
+      if (
+        studentKeys[index].toUpperCase() == answerKeys[index].toUpperCase() &&
+        index <= 39
+      ) {
         counter++;
         point = counter * 1.32;
         console.log(point);
@@ -19,5 +22,7 @@ module.exports = {
         point = counter * 1.36;
       }
     });
+
+    return point;
   },
 };
