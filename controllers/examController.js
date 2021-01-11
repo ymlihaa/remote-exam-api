@@ -72,7 +72,7 @@ const getOne = async (req, res, next) => {
 };
 
 const finishExam = async (req, res, next) => {
-  res.json(req.body.data);
+  let point = 0;
   const data = req.body.data;
   const docRef = await db.collection("exams").doc(data.user.ExamID);
   await docRef
@@ -80,12 +80,14 @@ const finishExam = async (req, res, next) => {
     .then((doc) => {
       if (doc.exists) {
         let json = doc.data();
-        tyt_pointCalculator(data.result, json["answerKey"]);
+        point = tyt_pointCalculator(data.result, json["answerKey"]);
+        console.log("point:", point);
       } else {
-        console.log("No such document");
+        res.status(400).send("No such document");
       }
     })
     .catch(function (error) {
+      res.status(404).send(error.message);
       console.log("Error getting document:", error);
     });
 };
@@ -111,9 +113,25 @@ const addExam = async (req, res, next) => {
     });
 };
 
+const deleteExam = async (req, res, next) => {
+  const data = req.body;
+  const docRef = await db.collection("exams").doc(data.examID);
+  await docRef
+    .delete()
+    .then(() => {
+      console.log("Document successfuly deleted ! ");
+      res.status(200).send();
+    })
+    .catch((error) => {
+      console.log("Error removing document: ", error);
+      res.status(404).send(error.message);
+    });
+};
+
 module.exports = {
   getAll,
   finishExam,
   addExam,
   getOne,
+  deleteExam,
 };

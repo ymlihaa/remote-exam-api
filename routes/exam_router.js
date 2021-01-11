@@ -8,6 +8,7 @@ const {
   finishExam,
   addExam,
   getOne,
+  deleteExam,
 } = require("../controllers/examController");
 
 // Listed Exams
@@ -17,7 +18,7 @@ router.post("/getOne", getOne);
 // creating Exams
 router.post("/create", addExam);
 // deleted Exams
-router.post("/delete", addExam);
+router.post("/delete", deleteExam);
 // finish Exam
 router.post("/finish", finishExam);
 
