@@ -33,7 +33,7 @@ const getAll = async (req, res, next) => {
       data.forEach((doc) => {
         console.log(doc.id);
         const exam = new Exam(
-          doc.data().id,
+          doc.id,
           doc.data().answerKey,
           doc.data().startTime,
           doc.data().endTime
