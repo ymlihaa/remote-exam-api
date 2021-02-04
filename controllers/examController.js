@@ -96,21 +96,26 @@ const addExam = async (req, res, next) => {
   const data = req.body;
   const examID = makeid(7);
   let arr;
-  arr = data.answerKey.split(",");
-  console.log(arr);
-  const docRef = await db.collection("exams").doc(examID);
-  await docRef
-    .set({
-      answerKey: arr,
-      startTime: data.startTime,
-      endTime: data.endTime,
-    })
-    .then(() => {
-      res.send(examID);
-    })
-    .catch((error) => {
-      res.status(404).send(error.message);
-    });
+  try {
+    arr = data.answerKey;
+    console.log(arr);
+    const docRef = await db.collection("exams").doc(examID);
+    await docRef
+      .set({
+        answerKey: data.answerKey,
+        startTime: data.startTime,
+        endTime: data.endTime,
+        type: data.type,
+      })
+      .then(() => {
+        res.send(examID);
+      })
+      .catch((error) => {
+        res.status(404).send(error.message);
+      });
+  } catch {
+    res.status(404).send();
+  }
 };
 
 const deleteExam = async (req, res, next) => {
