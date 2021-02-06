@@ -53,20 +53,23 @@ const getOne = async (req, res, next) => {
   const timeArr = [];
   console.log(examID);
   try {
-    const exams = await db.collection("exams").doc(examID);
+    const exams = await db.collection("exams").doc(examID.examID);
     const data = await exams.get();
-    if (data.empty) {
+    console.log(data);
+    if (!data.exists) {
       res.status(404).send("no exams record found");
     } else {
       const times = new Times(
         data.data().id,
         data.data().startTime,
-        data.data().endTime
+        data.data().endTime,
+        data.data().type
       );
       timeArr.push(times);
       res.status(200).send(times);
     }
   } catch (error) {
+    console.log(error.message);
     res.status(400).send(error.message);
   }
 };
