@@ -50,10 +50,11 @@ const getAll = async (req, res, next) => {
 
 const getOne = async (req, res, next) => {
   const examID = req.body.examID;
+  console.log(examID);
   const timeArr = [];
   console.log(examID);
   try {
-    const exams = await db.collection("exams").doc(examID.examID);
+    const exams = await db.collection("exams").doc(examID);
     const data = await exams.get();
     console.log(data);
     if (!data.exists) {
@@ -77,6 +78,7 @@ const getOne = async (req, res, next) => {
 const finishExam = async (req, res, next) => {
   let point = 0;
   const data = req.body.data;
+  console.log(data);
   const docRef = await db.collection("exams").doc(data.user.ExamID);
   await docRef
     .get()
