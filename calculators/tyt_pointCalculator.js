@@ -1,28 +1,35 @@
 module.exports = {
-  tyt_pointCalculator: function (studentKeys, answerKeys) {
-    let point = 1;
-    let counter = new Float32Array();
-    Object.keys(studentKeys).map((index) => {
-      console.log(
-        index,
-        ":",
-        "sta:",
-        studentKeys[index],
-        "=> ans",
-        answerKeys[index]
-      );
-      if (
-        studentKeys[index].toUpperCase() == answerKeys[index].toUpperCase() &&
-        index <= 39
-      ) {
-        counter++;
-        point = counter * 1.32;
-        console.log(point);
-      } else if (studentKeys[index] == answerKeys[index] && index <= 69) {
-        point = counter * 1.36;
-      }
-    });
+  tyt_pointCalculator: function (studentKey, answerKey) {
+    const formul = {
+      ek: 100,
+      tyt: {
+        tr: 3.3,
+        mat: 3.3,
+        cografya: 3.4,
+        tarih: 3.4,
+        felsefe: 3.4,
+        din: 3.4,
+        fizik: 3.4,
+        kimya: 3.4,
+        biyo: 3.4,
+      },
+    };
 
-    return point;
+    let total = formul.ek;
+    let counter = new Float32Array();
+    Object.keys(studentKey).map((key) => {
+      studentKey[key].map((item, index) => {
+        let katsayi = eval("formul.tyt." + key);
+        total += katSayi(item, answerKey[key][index], katsayi);
+      });
+    });
+    return total;
   },
 };
+function katSayi(val1, val2, dersKatsayi) {
+  let point = 0;
+  if (val1.toUpperCase() == val2.toUpperCase()) {
+    point += dersKatsayi;
+  }
+  return point;
+}
