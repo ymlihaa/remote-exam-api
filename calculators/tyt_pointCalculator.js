@@ -28,7 +28,7 @@ module.exports = {
 };
 function katSayi(val1, val2, dersKatsayi) {
   let point = 0;
-  if (val1.toUpperCase() == val2.toUpperCase()) {
+  if (val1 == val2) {
     point += dersKatsayi;
   }
   return point;

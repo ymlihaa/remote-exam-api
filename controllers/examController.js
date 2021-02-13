@@ -84,9 +84,17 @@ const finishExam = async (req, res, next) => {
     .get()
     .then((doc) => {
       if (doc.exists) {
-        let json = doc.data();
-        point = tyt_pointCalculator(data.result, json["answerKey"]);
-        console.log("point:", point);
+        const answerKey = doc.data().answerKey;
+        const studentKey = data.result;
+        switch (doc.data().type) {
+          case "TYT":
+            point = tyt_pointCalculator(studentKey, answerKey);
+            break;
+        }
+
+        Student_Exam(data, point);
+        console.log(point);
+        res.status(200).send("successfully");
       } else {
         res.status(400).send("No such document");
       }
@@ -121,6 +129,27 @@ const addExam = async (req, res, next) => {
   } catch {
     res.status(404).send();
   }
+};
+
+const Student_Exam = async (data, point) => {
+  const docRef = await db
+    .collection(data.user.ExamID)
+    .doc(data.user.studentNumber);
+  await docRef
+    .set({
+      answerKey: data.result,
+      point: point,
+      name: data.user.name,
+      surname: data.user.surname,
+      studentNumber: data.user.studentNumber,
+      type: data.user.type,
+    })
+    .then(() => {
+      return true;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
 
 const deleteExam = async (req, res, next) => {
