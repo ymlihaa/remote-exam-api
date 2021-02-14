@@ -1,5 +1,6 @@
 const Exam = require("../models/exam");
 const Times = require("../models/times");
+const Joined_Student = require("../models/Joined_Student");
 const calculators = require("../calculators/tyt_pointCalculator");
 const tyt_pointCalculator = calculators.tyt_pointCalculator;
 
@@ -152,6 +153,34 @@ const Student_Exam = async (data, point) => {
     });
 };
 
+const examine = async (req, res, next) => {
+  const data = req.body;
+  console.log(data);
+  try {
+    const docRef = await db.collection(data.examID);
+    const students = await docRef.get();
+    const student_List = [];
+    if (students.empty) {
+      res.status(404).send("no exams record found");
+    } else {
+      students.forEach((doc) => {
+        const Joined_Student_List = new Joined_Student(
+          doc.data().name,
+          doc.data().surname,
+          doc.data().studentNumber,
+          doc.data().point,
+          doc.data().type
+        );
+        console.log(Joined_Student_List);
+        student_List.push(Joined_Student_List);
+      });
+      res.send(student_List);
+    }
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
+
 const deleteExam = async (req, res, next) => {
   const data = req.body;
   const docRef = await db.collection("exams").doc(data.examID);
@@ -173,4 +202,5 @@ module.exports = {
   addExam,
   getOne,
   deleteExam,
+  examine,
 };
