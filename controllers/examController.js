@@ -173,6 +173,7 @@ const examine = async (req, res, next) => {
           doc.data().surname,
           doc.data().studentNumber,
           doc.data().point,
+          doc.data().type,
           doc.data().D,
           doc.data().Y,
           doc.data().B
