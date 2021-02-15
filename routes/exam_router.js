@@ -7,6 +7,7 @@ const {
   getAll,
   finishExam,
   addExam,
+  examine,
   getOne,
   deleteExam,
 } = require("../controllers/examController");
@@ -21,5 +22,7 @@ router.post("/create", addExam);
 router.post("/delete", deleteExam);
 // finish Exam
 router.post("/finish", finishExam);
+// examine student resuls
+router.post("/examine", examine);
 
 module.exports = router;

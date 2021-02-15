@@ -77,7 +77,7 @@ const getOne = async (req, res, next) => {
 };
 
 const finishExam = async (req, res, next) => {
-  let point = 0;
+  let obj;
   const data = req.body.data;
   console.log(data);
   const docRef = await db.collection("exams").doc(data.user.ExamID);
@@ -89,12 +89,13 @@ const finishExam = async (req, res, next) => {
         const studentKey = data.result;
         switch (doc.data().type) {
           case "TYT":
-            point = tyt_pointCalculator(studentKey, answerKey);
+            obj = tyt_pointCalculator(studentKey, answerKey);
             break;
         }
 
-        Student_Exam(data, point);
-        console.log(point);
+        Student_Exam(data, obj);
+        console.log(obj);
+        console.log(obj.total);
         res.status(200).send("successfully");
       } else {
         res.status(400).send("No such document");
@@ -132,14 +133,17 @@ const addExam = async (req, res, next) => {
   }
 };
 
-const Student_Exam = async (data, point) => {
+const Student_Exam = async (data, obj) => {
   const docRef = await db
     .collection(data.user.ExamID)
     .doc(data.user.studentNumber);
   await docRef
     .set({
       answerKey: data.result,
-      point: point,
+      point: obj.total,
+      D: obj.D,
+      Y: obj.Y,
+      B: obj.B,
       name: data.user.name,
       surname: data.user.surname,
       studentNumber: data.user.studentNumber,
@@ -169,7 +173,9 @@ const examine = async (req, res, next) => {
           doc.data().surname,
           doc.data().studentNumber,
           doc.data().point,
-          doc.data().type
+          doc.data().D,
+          doc.data().Y,
+          doc.data().B
         );
         console.log(Joined_Student_List);
         student_List.push(Joined_Student_List);
